@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int stuNum, relationNum; // 학생의 수와 전체 학생의 친구의 수
+	cin >> stuNum >> relationNum;
+	int* stus = new int[stuNum];
+
+	for (int i = 0; i <  stuNum; i++) {
+		stus[i] = 0;
+	}
+	
+	for (int i = 0; i < relationNum; i++) {
+		int stuA, stuB;
+		cin >> stuA >> stuB;
+		stus[stuA - 1] += 1;
+		stus[stuB - 1] += 1;
+	}
+
+	for (int i = 0; i < stuNum; i++) {
+		cout << stus[i] << '\n';
+	}
+}
