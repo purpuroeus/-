@@ -19,6 +19,6 @@ int main() {
 	}
 
 	for (int i = 0; i < stuNum; i++) {
-		cout << stus[i] << '\n';
+		cout << stus[i] << '\n';	// endl과 \n은 실행 시간에 있어 큰 차이를 보이므로
 	}
 }
