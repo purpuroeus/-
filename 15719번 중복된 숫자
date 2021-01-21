@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int size;
+	cin >> size;
+	int sum = 0;
+	int sumarr = 0;
+
+	for (int i = 1; i < size; i++) {
+		sum += i;
+	}
+
+	int input;
+	for (int i = 0; i < size; i++) {
+		scanf("%d", &input);
+		sumarr += input;
+	}
+
+	printf("%d", sumarr - sum);
+
+	return 0;
+}
