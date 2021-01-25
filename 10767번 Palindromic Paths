@@ -1,0 +1,133 @@
+/////////////////////
+// 시간 초과
+// 재귀 호출이 아닌 stack을 이용해 dfs를 수행하면 가능할지도
+/////////////////////
+
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+char **grass;
+int moves;
+int Size = 0;
+vector<string> routes;
+
+
+vector<string> getRoutes(int x, int y);
+bool swapper(string origin);
+int countPalindrome();
+void removeDupl();
+
+
+int main() {
+	int size = 0;
+	scanf("%d", &size);
+
+	Size = size;
+	grass = new char* [size];
+	for (int i = 0; i < size; i++) {
+		grass[i] = new char[size];
+		memset(grass[i], 0, sizeof(char) * size);
+	}
+
+	for (int i = 0; i < size; i++) {
+		string s;
+		cin >> s;
+		for (int j = 0; j < size; j++) {
+			grass[i][j] = s[j];
+		}
+	}
+	routes = getRoutes(0, 0);
+
+	//removeDupl();
+
+	int result = countPalindrome();
+	cout << result/2;
+}
+
+void removeDupl() {
+	sort(routes.begin(), routes.end());
+	routes.erase(unique(routes.begin(), routes.end()), routes.end());
+}
+
+int countPalindrome() {
+	int count = 0;
+	for (int i = 0; i < routes.size(); i++) {
+		if (swapper(routes[i]) == true) {
+			count++;
+		}
+	}
+	return count;
+}
+
+bool swapper(string origin) { //Palindrome에서 처리했을 때 compare 오류발생
+	string dest = origin;
+	for (int i = 0; i < dest.length()/2; i++) {
+		char temp = dest[i];
+		dest[i] = dest[dest.length() - 1 - i];
+		dest[dest.length() - 1 - i] = temp;
+	}
+	int a = origin.compare(dest);
+	if (a == 0) {
+		return true;
+	}
+	return false;
+}
+
+vector<string> getRoutes(int x, int y) { //깊이 우선 탐색 방식으로 모든 경로 (중복 포함)을 탐색
+	vector<string> result;
+	vector<string> right;
+	vector<string> down;
+	
+	char tchar = grass[x][y];
+
+	if ((x + 1 >= Size) && (y+1 >= Size)) {
+		string temp = "";
+		temp = grass[x][y];
+		result.push_back(temp);
+		return result;
+	}
+	if (x + 1 >= Size) {   //더이상 오른쪽 불가
+		down = getRoutes(x, y + 1);
+		for (int i = 0; i < down.size(); i++) {
+			string temp = down.at(i);
+			temp.insert(temp.begin(), grass[x][y]);
+			down[i] = temp;
+		}
+		result.insert(result.end(), down.begin(), down.end());
+		return result;
+	}
+	if (y + 1 >= Size) {   //더이상 아래로 불가
+		right = getRoutes(x + 1, y);
+		for (int i = 0; i < right.size(); i++) {
+			string temp = right.at(i);
+			temp.insert(temp.begin(), grass[x][y]);
+			right[i] = temp;
+		}
+		result.insert(result.end(), right.begin(), right.end());
+		return result;
+	}
+	right = getRoutes(x, y + 1);
+	down = getRoutes(x + 1, y);
+	for (int i = 0; i < right.size(); i++){
+		string temp = right.at(i);
+		temp.insert(temp.begin(), grass[x][y]);
+		right[i] = temp;
+	}
+
+	for (int i = 0; i < down.size(); i++) {
+		string temp = down.at(i);
+		temp.insert(temp.begin(), grass[x][y]);
+		down[i] = temp;
+	}
+	result.insert(result.end(), right.begin(), right.end());
+	result.insert(result.end(), down.begin(), down.end());
+	return result;
+}
