@@ -1,0 +1,69 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+void selecter();
+
+struct report {
+	short dday = 0;
+	short score = 0;
+	report() {}
+	report(short dday, short score) {
+		this->dday = dday;
+		this->score = score;
+	}
+};
+
+bool compare(const report& r1, const report& r2);
+
+report* repolist;
+bool* isselected;
+short n;
+int totalscore = 0;
+
+int main() {
+	scanf("%hd", &n);
+	repolist = new report[n];
+	isselected = new bool[n];
+	for (short i = 0; i < n; i++) {
+		isselected[i] = false;
+	}
+	for (short i = 0; i < n; i++) {
+		int tempd, tempn;
+		scanf("%d %d", &tempd, &tempn);
+		repolist[i] = report(tempd, tempn);
+	}
+	stable_sort(repolist, repolist + n, compare);
+	selecter();
+	printf("%d", totalscore);
+}
+
+bool compare(const report& r1, const report& r2) {
+	if (r1.score >= r2.score) {
+		return true;
+	}
+	return false;
+}
+
+void selecter() {
+	for (short i = 0; i < n; i++) {
+		report report = repolist[i];
+		if (isselected[report.dday-1] == true) {
+			for (short j = report.dday - 1; j >= 0; j--) {
+				if (isselected[j] == false) {
+					isselected[j] = true;
+					totalscore += repolist[i].score;
+					break;
+				}
+			}
+			continue;
+		}
+		if (isselected[report.dday-1] == false) {
+			isselected[report.dday-1] = true;
+			totalscore += repolist[i].score;
+		}
+	}
+}
