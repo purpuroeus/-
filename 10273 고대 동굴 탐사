@@ -1,0 +1,143 @@
+/*
+메모리 초과로 실패
+2차원 배열 graph를 tuple 자료구조를 사용하면 
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+#include <stack>
+
+using namespace std;
+
+struct seekresult {
+	stack<int> routes;
+	int result;
+	seekresult(stack<int> routes, int result) {
+		this->routes = routes;
+		this->result = result;
+	}
+};
+
+int t, n, e;
+
+int** graph;
+int* value;
+stack<int> routes;
+stack<int> nodes;
+seekresult seek(int node);
+
+
+
+
+int main() {
+	scanf("%d", &t);
+	for (int i = 0; i < t; i++) {
+		scanf("%d %d", &n, &e);
+
+		value = new int[n];
+
+		int temp = 0;
+
+		for (int i = 0; i < n; i++) {
+			scanf("%d", &temp);
+			value[i] = temp;
+		}
+
+		graph = new int* [n];
+		for (int i = 0; i < n; i++) {
+			graph[i] = new int[n];
+			for (int j = 0; j < n; j++) {
+				graph[i][j] = 0;
+			}
+		}
+
+		for (int i = 0; i < e; i++) {
+			int from, to, cost;
+			scanf("%d %d %d", &from, &to, &cost);
+			graph[from-1][to-1] = value[to-1] - cost;
+		}
+
+		if (n == 0) {
+			printf("%d %d\n%d\n", value[0], 1, 1);
+			continue;
+		}
+		if (e == 0) {
+			int max = 0;
+			for (int i = 0; i < n; i++) {
+				if (value[i] > max) {
+					max = value[i];
+				}
+			}
+			printf("%d %d\n%d\n", max, 1, 1);
+			continue;
+		}
+
+		seekresult result = seek(0);
+		int size = result.routes.size();
+		printf("%d %d\n", result.result, size);
+		for (int i = 0; i < size; i++) {
+			printf("%d ", result.routes.top() + 1);
+			result.routes.pop();
+		}
+		printf("\n");
+		graph = NULL;
+		value = NULL;
+
+		while ((routes.empty() == false) || (nodes.empty() == false)) {
+			if (routes.empty() == false) {
+				routes.pop();
+			}
+
+			if (nodes.empty() == false) {
+				nodes.pop();
+			}
+
+		}
+	}
+}
+
+seekresult seek(int node) {
+	int cnt = 0;
+	for (int i = 0; i < n; i++) {
+		if (graph[node][i] != 0) {
+			nodes.push(i);
+			cnt++;
+		}
+	}
+
+	if (cnt == 0) {			//잎 노드인 경우
+		stack<int> temp;
+		temp.push(node);
+		return seekresult(temp, 0);
+	}
+
+	int max = 0;
+	int result = 0;
+	stack<int> selroute;
+
+	for (int i = 0; i < cnt; i++) {
+		int nextnode = nodes.top();
+		nodes.pop();
+		seekresult sresult = seek(nextnode);
+		result = sresult.result;
+		result += graph[node][nextnode];
+		if (max < result) {
+			max = result;
+			selroute = sresult.routes;
+		}
+		else {
+			free(&sresult);
+		}
+	}
+
+	selroute.push(node);
+	
+	if (nodes.empty() == true) {
+		return seekresult(selroute, max + value[0]);
+	}
+
+	return seekresult(selroute, result);
+
+}
