@@ -1,0 +1,79 @@
+/*
+입력 h,w로 주어진 직사각형에 대해
+더 큰 정수 직사각형의 h,w를 출력하라
+넓은 정수 직사각형 : w>h인 직사각형
+정수 직사각형의 크기 비
+   1. 대각선의 길이가 더 긴 경우
+   2. 대각선의 길이가 같으면 높이가 더 높은 경우
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct rectval{     // 정수 직사각형을 나타내는 구조체. 높이, 너비, 넓이
+	int diagonal, h, w;
+	rectval(int h, int w) {
+		this->diagonal = w * w + h * h;
+		this->w = w;
+		this->h = h;
+	}
+};
+
+
+bool compare(rectval a, rectval b);
+void findPrint(int h, int w);
+
+vector<rectval> rects;
+
+int main() {
+	for (int i = 1; i < 150; i++) {   // 비교 대상의 w,h는 1 < 150이므로 모든 경우의 수를 vector에 넣음
+		for (int j = i + 1; j < 150; j++) {
+			rects.push_back(rectval(i, j));
+		}
+	}
+	sort(rects.begin(), rects.end(), compare);  //순서대로 비교하기 위한 정렬
+
+	while (true) {
+		int h, w;
+		scanf("%d %d", &h, &w);
+		if ((h == 0) && (w == 0)) {   //0 0입력일 때 종료
+			return 0;
+		}
+		findPrint(h, w);  // 조건에 맞는 정수 직사각형을 찾은 후 출력
+	}
+}
+
+bool compare(rectval a, rectval b) {    //비교 함수. 1. 대각선 길이  2. 높이 길이 순으로 정렬
+	if (a.diagonal < b.diagonal) {
+		return true;
+	}
+	if (a.diagonal == b.diagonal) {
+		if (a.h < b.h) {
+			return true;
+		}
+		return false;
+	}
+	return false;
+}
+
+void findPrint(int h, int w) {    // 찾은 후 출력하는 함수. 대각선의 길이가 더 긴 경우 + 대각선의 길이는 같지만 높이가 큰 경우
+	int diagonal = h * h + w * w;   // vector를 대각선 -> 높이 순으로 정렬했으므로 가장 먼저 나오는 대각선 = 대각선이 가장 작은 넓은 정수 직사각형
+	for (int i = 0; i < rects.size(); i++) {
+		rectval temp = rects.at(i);
+		if (temp.diagonal > diagonal) {
+			printf("%d %d\n", temp.h, temp.w);
+			return;
+		}
+		if (temp.diagonal == diagonal) {
+			if (temp.h > h) {
+				printf("%d %d\n", temp.h, temp.w);
+				return;
+			}
+		}
+	}
+}
