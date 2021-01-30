@@ -1,0 +1,95 @@
+/*
+뻐꾸기 해싱
+작동 원리
+1. 테이블 1의 해시 함수 실행
+2.1 테이블 1의 key값이 중복인 경우 -> 기존 값을 테이블 2로 보내고 넣기
+2.2 테이블 1의 key값이 비어있는 경우 -> 그냥 넣기
+3. 테이블 2의 key값이 중복인 경우 -> 기존 값을 넣고 테이블 1로 보내기
+4. 빈 공간이 발생할 때 까지 반복 or 일정 횟수 동안 안들어가면 재해싱
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+void printCase(int caseno);
+void inserTable(int value);
+
+int t1, t2, cnt;
+int* tcase;
+int curtable = 1;
+
+map<int, int> table1;
+map<int, int> table2;
+
+int main() {
+	int tcnt = 0;
+
+	while (true) {
+		scanf("%d %d %d", &t1, &t2, &cnt);
+		
+		if ((t1 == 0) && (t2 == 0) && (cnt == 0)) {
+			return 0;
+		}
+		
+		tcase = new int[cnt];
+		
+		for (int i = 0; i < cnt; i++) {
+			int temp = 0;
+			scanf("%d", &temp);
+			inserTable(temp);
+		}
+		tcnt++;
+		printCase(tcnt);
+		table1.clear();
+		table2.clear();
+	}
+}
+
+void inserTable(int value) {
+	if (curtable == 1) {
+		int key = value % t1;
+		if (table1.count(key)) {	// table1에 해당 값이 존재하는 경우
+			curtable = 2;			// table2에 기존 값을 넘기고 받은 값을 넣음
+			map<int, int>::iterator iter = table1.find(key);
+			int curval = iter->second;
+			table1[key] = value;
+			inserTable(curval);
+		}
+		else {
+			table1.insert(pair<int, int>(key, value));
+		}
+	}
+	else {
+		int key = value % t2;
+		if (table2.count(key) == 1) {	//table2에 해당 값이 존재하는 경우
+			curtable = 1;				//table1에 기존 값을 넘기고 받은 값을 넣음
+			map<int, int>::iterator iter = table2.find(key);
+			int curval = iter->second;
+			table2[key] = value;
+			inserTable(curval);
+		}
+		else {
+			table2.insert(pair<int, int>(key, value));
+			curtable = 1;
+		}
+	}
+}
+
+void printCase(int caseno) {
+	printf("Case %d:\n", caseno);
+	printf("Table 1\n");
+	map<int, int>::iterator iter;
+	for (iter = table1.begin(); iter != table1.end(); iter++) {
+		printf("%d:%d\n", iter->first, iter->second);
+	}
+	if (table2.empty() == false) {
+		printf("Table 2\n");
+		for (iter = table2.begin(); iter != table2.end(); iter++) {
+			printf("%d:%d\n", iter->first, iter->second);
+		}
+	}
+}
