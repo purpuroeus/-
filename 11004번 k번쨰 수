@@ -1,0 +1,36 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+int compare(const void* a, const void* b);
+
+int main() {
+	int n, k;
+	int* arr;
+	scanf("%d %d", &n, &k);
+	arr = new int[n];
+	for (int i = 0; i < n; i++) {
+		int temp = 0;
+		scanf("%d", &temp);
+		arr[i] = temp;
+	}
+	qsort(arr, n, sizeof(int), compare);
+	printf("%d\n", arr[k-1]);
+}
+
+int compare(const void* a, const void* b) {
+	int numa = *(int*)a;
+	int numb = *(int*)b;
+	if (numa < numb) {
+		return -1;
+	}
+	if (numa > numb) {
+		return 1;
+	}
+	return 0;
+}
