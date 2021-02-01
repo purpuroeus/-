@@ -1,0 +1,59 @@
+/*
+주어진 크기 n에 맞추어 string 생성
+중복되지 않는 substring 추출
+문제를 풀기 위한 string을 생성한 후 탐색을 하니 out of range 에러
+string의 위치를 표시하는 변수를 사용하면 에러 해결 가능할 듯
+*/
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <map>
+
+using namespace std;
+
+
+void scanner(string& str, int &length);
+void find(int& count, string str);
+
+const int notfound = string::npos;
+
+int main() {
+	string str;
+	int length = 0;
+	int count = 0;
+	scanner(str, length);
+	find(count, str);
+	printf("%d", count);
+}
+
+void scanner(string &str, int &length) {
+	char buffer[1001];
+	fgets(buffer, sizeof(buffer), stdin);
+	str = buffer;
+	str.erase(str.find("\n"));
+	int temp = 0;
+	scanf("%d", &temp);
+	length = temp;
+	int loop = (temp - str.size()) / str.size();
+	string append = str;
+	for (int i = 0; i < loop; i++) {
+		str.append(append);
+	}
+	str.append(str.substr(0, temp % str.size()));
+}
+
+void find(int& count, string str) {
+	map<string, string> map;
+	for (int i = 0; i < str.size(); i++) {
+		for (int j = 0; j < str.size(); j++) {
+			string temp = str.substr(i, j+1);
+			if (map.count(temp) == 0) {
+				count++;
+				map.insert(pair<string, string>(temp, temp));
+			}
+		}
+	}
+}
