@@ -1,0 +1,69 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void scanner(int& n, int& m);
+int calulate(int n, int m);
+bool nextComb(int n);
+
+int* cards;
+vector<int> mask;
+const int r = 3;
+
+int main() {
+	int n, m;
+	scanner(n, m);
+	int result = calulate(n, m);
+	printf("%d", result);
+}
+
+void scanner(int& n, int& m) {
+	int tmp = 0;
+	scanf("%d %d", &n, &m);
+	cards = new int[n];
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &tmp);
+		cards[i] = tmp;
+	}
+	sort(cards, cards + n);
+}
+
+int calulate(int n, int m) {
+	int sum = 0;
+	int max = -1;
+	while (nextComb(n)) {
+		sum = 0;
+		for (int i = 0; i < n; i++) {
+			if (mask[i] == 0) {
+				sum += cards[i];
+			}
+		}
+
+		if (sum <= m) {
+			if (max < sum) {
+				max = sum;
+			}
+		}
+	}
+	return max;
+}
+
+bool nextComb(int n) {
+	if (mask.empty() == true) {
+		for (int i = 0; i < n; i++) {
+			if (i < r) {
+				mask.push_back(0);
+			}
+			else {
+				mask.push_back(1);
+			}
+		}
+		sort(mask.begin(), mask.end());
+		return true;
+	}
+	return next_permutation(mask.begin(), mask.end());
+}
