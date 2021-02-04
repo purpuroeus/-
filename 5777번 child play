@@ -1,0 +1,102 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <cstdlib>
+#include <algorithm>
+
+using namespace std;
+
+
+struct slab {
+	int a, b, diff;
+	slab() { }
+	slab(int a, int b, int diff) {
+		this->a = a;
+		this->b = b;
+		this->diff = diff;
+	}
+};
+
+int scanner(int& n, int& suma, int& sumb);
+void checker(int suma, int sumb, int n, int diff);
+bool compare(const slab& a, const slab& b);
+
+slab* slabs;
+
+
+int main() {
+	while (true) {
+		int n = 0;
+		int suma, sumb;
+		int diff = scanner(n, suma, sumb);
+		if (n == 0) {
+			return 0;
+		}
+		checker(suma, sumb, n, diff);
+	}
+
+}
+
+void checker(int suma, int sumb, int n, int diff) {
+	if (suma == sumb) {
+		printf("%d discard none", suma);
+		return;
+	}
+	if (diff == 0) {
+		printf("%d discard none\n", (suma + sumb) / 2);
+		return;
+	}
+	int checkdiff = diff;
+	for (int i = 0; i < n; i++) {
+		checkdiff -= slabs[i].diff;
+		if (checkdiff == 0) {
+			if (slabs[i].a > slabs[i].b) {
+				int temp = slabs[i].a;
+				slabs[i].a = slabs[i].b;
+				slabs[i].b = temp;
+			}
+			printf("%d discard %d %d\n", (suma + sumb - slabs[i].a - slabs[i].b) / 2, slabs[i].a, slabs[i].b);
+			return;
+		}
+		else {
+			checkdiff = diff;
+		}
+	}
+	printf("impossible\n");
+}
+
+int scanner(int& n, int& suma, int& sumb) {
+	scanf("%d", &n);
+	if (n == 0) {
+		return 0;
+	}
+	slabs = new slab[n];
+	int a, b;
+	int diff = 0;
+	suma = 0; sumb = 0;
+	for (int i = 0; i < n; i++) {
+		scanf("%d %d", &a, &b);
+		slabs[i].a = a;
+		slabs[i].b = b;
+		slabs[i].diff = abs(a - b);
+		suma += a; sumb += b;
+		diff -= slabs[i].diff;
+		diff = abs(diff);
+	}
+	sort(slabs, slabs + n, compare);
+	return diff;
+}
+
+bool compare(const slab& a, const slab& b) {
+	int asum = a.a + a.b;
+	int bsum = b.a + b.b;
+	if (asum < bsum) {
+		return true;
+	}
+	if (asum == bsum) {
+		if (a.diff < b.diff) {
+			return true;
+		}
+	}
+	return false;
+}
