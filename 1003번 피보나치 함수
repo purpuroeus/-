@@ -1,0 +1,35 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int fiboSize = 41;
+
+int fibos[fiboSize];
+void genFibo();
+
+int main() {
+    int n;
+    int cnt;
+    fibos[0] = 0;
+    fibos[1] = 1;
+    genFibo();
+    scanf("%d", &cnt);
+    for (int i = 0; i < cnt; i++) {
+        scanf("%d", &n);
+        if (n == 0) {
+            printf("%d %d\n", 1, 0);
+            continue;
+        }
+        printf("%d %d\n", fibos[n - 1], fibos[n]);
+    }
+    return 0;
+}
+
+void genFibo() {
+    for (int i = 2; i < fiboSize; i++) {
+        fibos[i] = fibos[i - 1] + fibos[i - 2];
+    }
+}
