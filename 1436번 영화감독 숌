@@ -1,0 +1,41 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int nthDevNum(int n);
+bool checkString(int n);
+
+int main() {
+	int n;
+	scanf("%d", &n);
+	printf("%d",nthDevNum(n));
+}
+
+int nthDevNum(int n) {
+	int count = 0;
+	int curr = 666;
+	while (true) {
+		if (checkString(curr) == true) {
+			count++;
+		}
+		if (count == n) {
+			return curr;
+		}
+		curr++;
+	}
+}
+
+bool checkString(int n) {
+	string num = to_string(n);
+	for (int i = 0; i < num.size(); i++) {
+		if (i + 2 >= num.size()) {
+			return false;
+		}
+		if ((num[i] == '6') && (num[i+1] == '6') && (num[i+2] == '6')) {
+			return true;
+		}
+	}
+}
