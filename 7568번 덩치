@@ -1,0 +1,51 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct physical {
+	int height;
+	int weight;
+	int rank;
+};
+
+void scanner(int& n);
+void rankGen(int n);
+
+vector<physical> physics;
+
+
+int main() {
+	int n;
+	scanner(n);
+	rankGen(n);
+	for (int i = 0; i < n; i++) {
+		printf("%d ", physics[i].rank);
+	}
+}
+
+void scanner(int& n) {
+	int height, weight;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d %d", &height, &weight);
+		physical temp;
+		temp.height = height;   temp.weight = weight;
+		physics.push_back(temp);
+	}
+}
+
+void rankGen(int n) {
+	int rank = 1;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if ((physics[i].height < physics[j].height) && (physics[i].weight < physics[j].weight)) {
+				rank++;
+			}
+		}
+		physics[i].rank = rank;
+		rank = 1;
+	}
+}
