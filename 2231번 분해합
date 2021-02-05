@@ -1,0 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int calculate(int n);
+int generator(int m, int n);
+
+int main() {
+	int n;
+	scanf("%d", &n);
+	printf("%d", calculate(n));
+}
+
+int calculate(int n) {
+	vector<int> gens;
+	int temp;
+	for (int i = 1; i < n; i++) {
+		temp = generator(i, n);
+		if (temp != -1) {
+			gens.push_back(i);
+		}
+	}
+	if (gens.empty() == true) {
+		return 0;
+	}
+
+	sort(gens.begin(), gens.end());
+	return gens.front();
+}
+
+int generator(int m, int n) {
+	int sum = m;
+	while (m > 0) {
+		sum += m % 10;
+		m /= 10;
+	}
+	if (sum == n) {
+		return sum;
+	}
+	else {
+		return -1;
+	}
+}
