@@ -1,0 +1,81 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+void scanner(int& n, int& m);
+int checker(int n, int m);
+
+int** board;
+
+int main() {
+	int n, m;
+	scanner(n, m);
+	printf("%d", checker(n, m));
+}
+
+void scanner(int& n, int& m) {
+	scanf("%d %d", &n, &m);
+	board = new int*[n];
+	int temp = 0;
+	char tempc;
+	for (int i = 0; i < n; i++) {
+		board[i] = (int*) malloc(sizeof(int) * m);
+		for (int j = 0; j < m; j++) {
+			scanf(" %c", &tempc);
+			if (tempc == 'B') {
+				board[i][j] = -1;
+			}
+			if (tempc == 'W') {
+				board[i][j] = 1;
+			}
+		}
+	}
+}
+
+int checker(int n, int m) {
+	int Wcount = 0, Bcount = 0;
+
+	int Wmin = 10000000, Bmin = 10000000;
+
+	for (int i = 0; i < n - 8 + 1; i++) {
+		for (int j = 0; j < m - 8 + 1; j++) {
+			for (int k = i; k < 8+i; k++) {
+				for (int l = j; l < 8+j; l++) {
+					if ((k + l) % 2 == 0) {
+						if (board[k][l] != 1) {
+							Wcount++;
+						}
+						else {
+							Bcount++;
+						}
+					}
+					else {
+						if (board[k][l] != 1) {
+							Bcount++;
+						}
+						else {
+							Wcount++;
+						}
+					}
+				}
+			}
+			if (Wcount < Wmin) {
+				Wmin = Wcount;
+			}
+			if (Bcount < Bmin) {
+				Bmin = Bcount;
+			}
+			Wcount = 0; Bcount = 0;
+		}
+	}
+	if (Wmin < Bmin) {
+		return Wmin;
+	}
+	else {
+		return Bmin;
+	}
+}
