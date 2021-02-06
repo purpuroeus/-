@@ -4,28 +4,54 @@
 
 using namespace std;
 
-int cases[1000001];
+const int Max = 1000001;
+const int devider = 15746;
 
-int numOfCase(int n);
+int cases[Max];
+
+//int numOfCase(int n);
+//
+//int main() {
+//	cases[1] = 1;
+//	cases[2] = 2;
+//	int n;
+//	scanf("%d", &n);
+//	printf("%d\n", numOfCase(n));
+//}
+
+//int numOfCase(int n) {
+//	if (n == 1) {
+//		return cases[1];
+//	}
+//	if (n == 2) {
+//		return cases[2];
+//	}
+//	if (cases[n] != 0) {
+//		return cases[n];
+//	}
+//	cases[n] = (numOfCase(n - 1) + numOfCase(n - 2)) % 15746;
+//	return cases[n];
+//}
+
+void Igniter();
 
 int main() {
-	cases[1] = 1;
-	cases[2] = 2;
+	Igniter();
 	int n;
 	scanf("%d", &n);
-	printf("%d\n", numOfCase(n));
+	printf("%d\n", cases[n]);
 }
 
-int numOfCase(int n) {
-	if (n == 1) {
-		return cases[1];
+void Igniter() {
+	for (int i = 1; i < Max; i++) {
+		if (i == 1) {
+			cases[1] = 1;
+			continue;
+		}
+		if (i == 2) {
+			cases[2] = 2;
+			continue;
+		}
+		cases[i] = (cases[i - 1] + cases[i - 2]) % devider;
 	}
-	if (n == 2) {
-		return cases[2];
-	}
-	if (cases[n] != 0) {
-		return cases[n];
-	}
-	cases[n] = (numOfCase(n - 1) + numOfCase(n - 2)) % 15746;
-	return cases[n];
 }
