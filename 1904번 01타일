@@ -1,0 +1,31 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+
+using namespace std;
+
+int cases[1000001];
+
+int numOfCase(int n);
+
+int main() {
+	cases[1] = 1;
+	cases[2] = 2;
+	int n;
+	scanf("%d", &n);
+	printf("%d\n", numOfCase(n));
+}
+
+int numOfCase(int n) {
+	if (n == 1) {
+		return cases[1];
+	}
+	if (n == 2) {
+		return cases[2];
+	}
+	if (cases[n] != 0) {
+		return cases[n];
+	}
+	cases[n] = (numOfCase(n - 1) + numOfCase(n - 2)) % 15746;
+	return cases[n];
+}
