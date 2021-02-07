@@ -1,0 +1,28 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+
+using namespace std;
+
+void sidesGen();
+const int Max = 101;
+
+long long sides[Max];
+
+int main() {
+	sidesGen();
+	int n, t;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &t);
+		printf("%lld\n", sides[t]);
+	}
+}
+
+void sidesGen() {
+	sides[1] = 1; sides[2] = 1; sides[3] = 1;
+	sides[4] = 2; sides[5] = 2;
+	for (int i = 6; i < Max; i++) {
+		sides[i] = sides[i - 1] + sides[i - 5];
+	}
+}
