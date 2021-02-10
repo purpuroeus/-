@@ -1,0 +1,57 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int divider = 1000000007;
+int max2exp = 0;
+vector<long long> bdigit;
+vector<long long> exps;
+
+int calculate();
+void scanner(long long& a, long long& x);
+void makeExp(long long a, long long x);
+void makeBinaryDigit(long long val);
+
+int main() {
+	long long a, x;
+	scanner(a, x);
+	printf("%d", calculate());
+}
+
+int calculate() {
+	unsigned long long result = 1;
+	for (int i = 0; i < bdigit.size(); i++) {
+		if (bdigit[i] == 1) {
+			result *= exps[i];
+			result %= divider;
+		}
+	}
+	return result;
+}
+
+void scanner(long long& a, long long& x) {
+	scanf("%lld %lld", &a, &x);
+	max2exp = log2(x);
+	makeExp(a, x);
+	makeBinaryDigit(x);
+}
+
+void makeExp(long long a, long long x) {
+	exps.push_back(a % divider);
+	for (int i = 1; i <= max2exp; i++) {
+		exps.push_back((exps.at(i - 1) * exps.at(i - 1)) % divider);
+	}
+}
+
+void makeBinaryDigit(long long val) {
+	for (int i = 1; val > 0; i *= 10) {
+		long long binary = val % 2;
+		bdigit.push_back(binary);
+		val /= 2;
+	}
+}
