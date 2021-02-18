@@ -1,0 +1,53 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int digit = 10;
+const int mod = 1000000000;
+
+int** dp;
+
+void scanner(int& n);
+void initArray(int n);
+
+int main() {
+	int n;
+	scanner(n);
+	int result = 0;
+	for (int i = 0; i < digit; i++) {
+		result = (result + dp[n][i]) % mod;
+	}
+	printf("%d", result);
+}
+
+void scanner(int& n) {
+	scanf("%d", &n);
+	initArray(n);
+}
+
+void initArray(int n) {
+	dp = new int*[n+1];
+	for (int i = 0; i < n+1; i++) {
+		dp[i] = (int*)malloc(sizeof(int) * digit);
+	}
+	dp[1][0] = 0;
+	for (int i = 1; i < digit; i++) {
+		dp[1][i] = 1;
+	}
+	for (int i = 2; i <= n; i++) {
+		for (int j = 0; j < digit; j++) {
+			if (j == 0) {
+				dp[i][j] = dp[i-1][j+1] % mod;
+				continue;
+			}
+			if (j == 9) {
+				dp[i][j] = dp[i - 1][j - 1] % mod;
+				break;
+			}
+			dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j + 1]) % mod;
+		}
+	}
+}
