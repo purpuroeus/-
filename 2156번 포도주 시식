@@ -1,0 +1,53 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+
+using namespace std;
+
+//int dp[10003];
+//int wines[10003];
+
+int* dp;
+int* wines;
+
+void scanner(int& n);
+int getMaximum(int n);
+int max(int a, int b);
+
+int main() {
+	int n;
+	scanner(n);
+	printf("%d", getMaximum(n));
+}
+
+void scanner(int& n) {
+	scanf("%d", &n);
+	dp = (int*) malloc(sizeof(int) * (n + 3));
+	wines = (int*)malloc(sizeof(int) * (n + 3));
+	for (int i = 3; i < n+3; i++) {
+		scanf("%d", &wines[i]);
+	}
+}
+
+int getMaximum(int n) {
+	for (int i = 0; i < n; i++) {
+		dp[i] = 0;
+	}
+	int maxdp = 0;
+	int result = 0;
+	
+	for (int i = 3; i < n+3; i++) {
+		maxdp = max(dp[i - 3] + wines[i - 1] + wines[i], dp[i - 2] + wines[i]);
+		maxdp = max(maxdp, dp[i - 1]);
+		dp[i] = maxdp;
+		result = max(result, maxdp);
+	}
+	return result;
+}
+
+int max(int a, int b) {
+	if (a > b) {
+		return a;
+	}
+	return b;
+}
