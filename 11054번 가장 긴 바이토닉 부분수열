@@ -1,0 +1,61 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int* arr;
+int* dpl;
+int* dpr;
+
+void scanner(int& n);
+int getLIS(int n);
+
+int main() {
+	int n;
+	scanner(n);
+	printf("%d", getLIS(n));
+}
+
+void scanner(int& n) {
+	scanf("%d", &n);
+	arr = (int*)malloc(sizeof(int) * n);
+	dpl = (int*)malloc(sizeof(int) * n);
+	dpr = (int*)malloc(sizeof(int) * n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &arr[i]);
+		dpl[i] = 1;
+		dpr[i] = 1;
+	}
+}
+
+int getLIS(int n) {
+	int curr, maxlength = 0;
+	for (int i = 0; i < n; i++) {
+		curr = arr[i];
+		for (int j = i - 1; j >= 0; j--) {
+			if (curr > arr[j]) {
+				dpl[i] = max(dpl[i], dpl[j] + 1);
+			}
+		}
+		curr = arr[n - i];
+		for (int j = n - i; j < n; j++) {
+			if (curr > arr[j]) {
+				dpr[n - i] = max(dpr[n - i], dpr[j] + 1);
+			}
+		}
+	}
+	/*for (int i = n; i >= 0; i--) {
+		curr = arr[i];
+		for (int j = i + 1; j < n; j++) {
+			if (curr > arr[j]) {
+				dpr[i] = max(dpr[i], dpr[j] + 1);
+			}
+		}
+	}*/
+	for (int i = 0; i < n; i++) {
+		maxlength = max(dpl[i] + dpr[i] - 1, maxlength);
+	}
+	return maxlength;
+}
