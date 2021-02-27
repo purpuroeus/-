@@ -1,0 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int powerpole[501] = { 0 };
+int dp[500] = { 0 };
+
+int scanner(int& n);
+int getRemove(int n, int size);
+
+int main() {
+	int n;
+	int size = scanner(n);
+	printf("%d", getRemove(n, size));
+}
+
+int scanner(int& n) {
+	scanf("%d", &n);
+	int temp;
+	int size = -1;
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &temp);
+		scanf("%d", &powerpole[temp]);
+		size = max(size, powerpole[temp]);
+		dp[temp] = 1;
+	}
+	return size;
+}
+
+int getRemove(int n, int size) {
+	int returnval = -1;
+	for (int i = 0; i < size + 1; i++) {
+		if (powerpole[i] == 0) {
+			continue;
+		}
+		for (int j = i - 1; j > 0; j--) {
+			if (powerpole[i] > powerpole[j]) {
+				dp[i] = max(dp[i], dp[j] + 1);
+			}
+		}
+		returnval = max(dp[i], returnval);
+	}
+	return n - returnval;
+}
