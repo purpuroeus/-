@@ -1,0 +1,38 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+void scanner(int& n);
+int getLarge(int n);
+
+int* arr;
+int* dp;
+
+int main() {
+	int n;
+	scanner(n);
+	printf("%d", getLarge(n));
+}
+
+void scanner(int& n) {
+	scanf("%d", &n);
+	arr = (int*) malloc(sizeof(int) * n);
+	dp = (int*)malloc(sizeof(int) * n);
+	fill(dp, dp + n, 0);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &arr[i]);
+	}
+	dp[0] = arr[0];
+}
+
+int getLarge(int n) {
+	int maxsum = dp[0];
+	for (int i = 1; i < n; i++) {
+		dp[i] = max(dp[i - 1] + arr[i], arr[i]);
+		maxsum = max(maxsum, dp[i]);
+	}
+	return maxsum;
+}
