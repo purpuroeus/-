@@ -1,0 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct jewel{
+	int w = 0, v = 0;
+};
+
+void scanner(int& n, int& w);
+int getMaxValue(int n, int w);
+
+jewel* jewels;
+int** dp;
+
+int main() {
+	int n, w;
+	scanner(n, w);
+	printf("%d", getMaxValue(n, w));
+}
+
+void scanner(int& n, int& w) {
+	scanf("%d %d", &n, &w);
+	dp = new int* [n+1];
+	jewels = (jewel*)malloc(sizeof(jewel) * (n + 1));
+	for (int i = 0; i < n+1; i++) {
+		dp[i] = (int*) malloc(sizeof(int) * (w + 1));
+		fill(dp[i], dp[i] + w + 1, 0);
+		if (i == 0) { continue; }
+		scanf("%d %d", &jewels[i].w, &jewels[i].v);
+	}
+}
+
+int getMaxValue(int n, int w) {
+	for (int i = 1; i < n + 1; i++) {
+		for (int j = 0; j < w + 1; j++) {
+			if (j < jewels[i].w) {
+				dp[i][j] = dp[i - 1][j];
+				continue;
+			}
+			dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - jewels[i].w] + jewels[i].v);
+		}
+	}
+	return dp[n][w];
+}
